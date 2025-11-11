@@ -9,7 +9,11 @@ from pymongo import MongoClient
 class Database:
     """Simple MongoDB database handler for storing classification results."""
 
-    def __init__(self, connection_string="mongodb://localhost:27017/", db_name="animal_classifier"):
+    def __init__(
+        self,
+        connection_string="mongodb://localhost:27017/",
+        db_name="animal_classifier",
+    ):
         """
         Initialize database connection.
 
@@ -37,7 +41,7 @@ class Database:
             "image_name": image_name,
             "predicted_class": predicted_class,
             "confidence": confidence,
-            "timestamp": datetime.now()
+            "timestamp": datetime.now(),
         }
         result = self.collection.insert_one(document)
         return result.inserted_id

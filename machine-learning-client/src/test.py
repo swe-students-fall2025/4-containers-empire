@@ -8,17 +8,18 @@ import os
 import sys
 
 # Suppress TensorFlow warnings (must be set before importing tensorflow)
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TF messages
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'  # Disable oneDNN custom operations
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"  # Suppress TF messages
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"  # Disable oneDNN custom operations
 
 # pylint: disable=wrong-import-position,import-error,no-name-in-module
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 from PIL import Image, ImageOps
 import numpy as np
+
 # pylint: enable=wrong-import-position,import-error,no-name-in-module
 
-tf.get_logger().setLevel('ERROR')
+tf.get_logger().setLevel("ERROR")
 
 # Suppress scientific notation for clarity
 np.set_printoptions(suppress=True)
@@ -40,7 +41,9 @@ image_path = sys.argv[1]
 image = Image.open(image_path).convert("RGB")
 image = ImageOps.fit(image, (224, 224), Image.Resampling.LANCZOS)
 image_array = np.asarray(image)
-normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1  # normalize to [-1, 1]
+normalized_image_array = (
+    image_array.astype(np.float32) / 127.5
+) - 1  # normalize to [-1, 1]
 data = np.expand_dims(normalized_image_array, axis=0)
 
 # Run prediction
