@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 pylint = "*"
 black = "*"
-pymongo = "*"
 tensorflow = "~=2.15.0"
 pillow = "*"
 numpy = "*"
