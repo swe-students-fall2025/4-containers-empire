@@ -86,4 +86,3 @@ class AnimalClassifier:
         class_name = self.class_names[index]
         confidence_score = float(prediction[0][index])
         return class_name, confidence_score
-

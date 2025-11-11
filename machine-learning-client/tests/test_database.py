@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../src"))
 
 # pylint: disable=wrong-import-position,import-error
 from database import Database
+
 # pylint: enable=wrong-import-position,import-error
 
 
@@ -35,10 +36,7 @@ class TestDatabase:
         mock_client = MagicMock()
         mock_mongo_client_class.return_value = mock_client
 
-        db = Database(
-            connection_string="mongodb://custom:27017/",
-            db_name="custom_db"
-        )
+        db = Database(connection_string="mongodb://custom:27017/", db_name="custom_db")
 
         mock_mongo_client_class.assert_called_once_with("mongodb://custom:27017/")
         assert db.client == mock_client
@@ -52,14 +50,20 @@ class TestDatabase:
         # Mock insert_one result
         mock_result = Mock()
         mock_result.inserted_id = "test_id_123"
-        mock_client["animal_classifier"]["classifications"].insert_one.return_value = mock_result
+        mock_client["animal_classifier"][
+            "classifications"
+        ].insert_one.return_value = mock_result
 
         db = Database()
         result_id = db.save_classification("dog.jpg", "mammal", 0.95)
 
         # Verify insert_one was called
-        mock_client["animal_classifier"]["classifications"].insert_one.assert_called_once()
-        call_args = mock_client["animal_classifier"]["classifications"].insert_one.call_args[0][0]
+        mock_client["animal_classifier"][
+            "classifications"
+        ].insert_one.assert_called_once()
+        call_args = mock_client["animal_classifier"][
+            "classifications"
+        ].insert_one.call_args[0][0]
 
         assert call_args["image_name"] == "dog.jpg"
         assert call_args["predicted_class"] == "mammal"
@@ -79,7 +83,9 @@ class TestDatabase:
             {"image_name": "cat.jpg", "predicted_class": "mammal", "confidence": 0.9},
             {"image_name": "bird.jpg", "predicted_class": "bird", "confidence": 0.85},
         ]
-        mock_client["animal_classifier"]["classifications"].find.return_value = mock_data
+        mock_client["animal_classifier"][
+            "classifications"
+        ].find.return_value = mock_data
 
         db = Database()
         results = db.get_all_classifications()
@@ -100,14 +106,18 @@ class TestDatabase:
             {"image_name": "recent.jpg", "predicted_class": "bird", "confidence": 0.9}
         ]
         mock_collection = mock_client["animal_classifier"]["classifications"]
-        mock_collection.find.return_value.sort.return_value.limit.return_value = mock_data
+        mock_collection.find.return_value.sort.return_value.limit.return_value = (
+            mock_data
+        )
 
         db = Database()
         results = db.get_recent_classifications()
 
         mock_collection.find.assert_called_once()
         mock_collection.find.return_value.sort.assert_called_once_with("timestamp", -1)
-        mock_collection.find.return_value.sort.return_value.limit.assert_called_once_with(10)
+        mock_collection.find.return_value.sort.return_value.limit.assert_called_once_with(
+            10
+        )
         assert len(results) == 1
         assert results[0]["image_name"] == "recent.jpg"
 
@@ -123,7 +133,9 @@ class TestDatabase:
         db = Database()
         db.get_recent_classifications(limit=5)
 
-        mock_collection.find.return_value.sort.return_value.limit.assert_called_once_with(5)
+        mock_collection.find.return_value.sort.return_value.limit.assert_called_once_with(
+            5
+        )
 
     @patch("database.MongoClient")
     def test_close_connection(self, mock_mongo_client_class):
@@ -144,14 +156,19 @@ class TestDatabase:
 
         mock_result = Mock()
         mock_result.inserted_id = "test_id"
-        mock_client["animal_classifier"]["classifications"].insert_one.return_value = mock_result
+        mock_client["animal_classifier"][
+            "classifications"
+        ].insert_one.return_value = mock_result
 
         db = Database()
         db.save_classification("cat.jpg", "mammal", 0.95)
         db.save_classification("bird.jpg", "bird", 0.87)
         db.save_classification("fish.jpg", "fish", 0.92)
 
-        assert mock_client["animal_classifier"]["classifications"].insert_one.call_count == 3
+        assert (
+            mock_client["animal_classifier"]["classifications"].insert_one.call_count
+            == 3
+        )
 
     @patch("database.MongoClient")
     def test_collection_name(self, mock_mongo_client_class):

@@ -14,6 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../src"))
 
 # pylint: disable=wrong-import-position,import-error
 from classifier import AnimalClassifier
+
 # pylint: enable=wrong-import-position,import-error
 
 
@@ -48,7 +49,9 @@ class TestAnimalClassifier:
     """Test cases for the AnimalClassifier class."""
 
     @patch("classifier.load_model")
-    def test_init_with_custom_paths(self, mock_load_model, mock_model, sample_labels, tmp_path):  # pylint: disable=redefined-outer-name
+    def test_init_with_custom_paths(
+        self, mock_load_model, mock_model, sample_labels, tmp_path
+    ):  # pylint: disable=redefined-outer-name
         """Test classifier initialization with custom paths."""
         mock_model_path = str(tmp_path / "model.h5")
         mock_load_model.return_value = mock_model
@@ -62,7 +65,9 @@ class TestAnimalClassifier:
         mock_load_model.assert_called_once_with(mock_model_path, compile=False)
 
     @patch("classifier.load_model")
-    def test_load_labels(self, mock_load_model, mock_model, sample_labels):  # pylint: disable=redefined-outer-name
+    def test_load_labels(
+        self, mock_load_model, mock_model, sample_labels
+    ):  # pylint: disable=redefined-outer-name
         """Test loading labels from file."""
         mock_load_model.return_value = mock_model
 
@@ -75,7 +80,9 @@ class TestAnimalClassifier:
         assert len(classifier.class_names) == 5
 
     @patch("classifier.load_model")
-    def test_preprocess_image(self, mock_load_model, mock_model, sample_labels, sample_image):  # pylint: disable=redefined-outer-name
+    def test_preprocess_image(
+        self, mock_load_model, mock_model, sample_labels, sample_image
+    ):  # pylint: disable=redefined-outer-name
         """Test image preprocessing."""
         mock_load_model.return_value = mock_model
 
@@ -95,7 +102,9 @@ class TestAnimalClassifier:
         assert processed.dtype == np.float32
 
     @patch("classifier.load_model")
-    def test_predict(self, mock_load_model, mock_model, sample_labels, sample_image):  # pylint: disable=redefined-outer-name
+    def test_predict(
+        self, mock_load_model, mock_model, sample_labels, sample_image
+    ):  # pylint: disable=redefined-outer-name
         """Test image classification prediction."""
         mock_load_model.return_value = mock_model
 
@@ -129,7 +138,9 @@ class TestAnimalClassifier:
         assert abs(confidence - 0.8) < 0.001
 
     @patch("classifier.load_model")
-    def test_predict_invalid_image_path(self, mock_load_model, mock_model, sample_labels):  # pylint: disable=redefined-outer-name
+    def test_predict_invalid_image_path(
+        self, mock_load_model, mock_model, sample_labels
+    ):  # pylint: disable=redefined-outer-name
         """Test prediction with invalid image path."""
         mock_load_model.return_value = mock_model
 
@@ -165,7 +176,9 @@ class TestAnimalClassifier:
         assert mock_model.predict.call_count == 2
 
     @patch("classifier.load_model")
-    def test_preprocess_image_size(self, mock_load_model, mock_model, sample_labels, tmp_path):  # pylint: disable=redefined-outer-name
+    def test_preprocess_image_size(
+        self, mock_load_model, mock_model, sample_labels, tmp_path
+    ):  # pylint: disable=redefined-outer-name
         """Test preprocessing images of different sizes."""
         mock_load_model.return_value = mock_model
 
