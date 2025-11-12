@@ -3,7 +3,7 @@ Test script for animal classification model.
 """
 
 import sys
-from .classifier import AnimalClassifier
+from classifier import AnimalClassifier
 
 
 def main(image_path):
