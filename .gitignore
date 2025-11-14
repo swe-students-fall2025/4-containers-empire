@@ -147,4 +147,6 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+machine-learning-client/test_images/
 db/
