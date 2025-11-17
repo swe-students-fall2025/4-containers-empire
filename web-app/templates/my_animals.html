@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" name=""viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="/style.css">
+    <title>My animals</title>
+  </head>
+  <body>
+    <nav>
+      <a href="{{ url_for('home') }}">Who's That Animal?</a>
+      <div>
+        <a href="{{ url_for('upload') }}">Upload more photos</a>
+      </div>
+    </nav>
+
+    <main>
+      <h1>My animals</h1>
+
+      {% if observations %}
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {% for obs in observations %}
+            <div>
+              <img src="{{ url_for('get_image', img_id=str(obs['image_fs_id'])) }}">
+              <p>{{ obs['species'] }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>You haven’t uploaded any observations yet.</p>
+      {% endif %}
+    </main>
+  </body>
+</html>
