@@ -9,6 +9,8 @@ black = "*"
 tensorflow = "~=2.15.0"
 pillow = "*"
 numpy = "*"
+pymongo = "*"
+python-dotenv = "*"
 
 [dev-packages]
 pytest = "*"
