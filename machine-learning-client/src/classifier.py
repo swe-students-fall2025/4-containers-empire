@@ -80,7 +80,7 @@ class AnimalClassifier:
             Preprocessed image array ready for prediction
         """
         image = Image.open(image_path).convert("RGB")
-        # Using your original ImageOps.fit method
+        # Using original ImageOps.fit method
         image = ImageOps.fit(image, (224, 224), Image.Resampling.LANCZOS)
         image_array = np.asarray(image)
         normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
@@ -110,18 +110,17 @@ class AnimalClassifier:
             # --- Logic added ---
             processing_time_ms = int((time.time() - start_time) * 1000)
 
-            # --- FIX: Combined 3 lines into 1 to reduce local variables ---
+            # Solved "Too many local variables"
             image_id = (
                 f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_"
                 f"{os.path.basename(image_path)}"
             )
-            # --- End of fix ---
 
             result = {
                 "image_id": image_id,
                 "image_path": image_path,
-                "animal_type": class_name,  # Using  variable name
-                "confidence": confidence_score,  # Using  variable name
+                "animal_type": class_name,  # Using variable name
+                "confidence": confidence_score,  # Using variable name
                 "processing_time_ms": processing_time_ms,
                 "model_version": self.model_version,
                 "all_predictions": {
@@ -132,9 +131,8 @@ class AnimalClassifier:
 
             # Save to database if connected and requested
             if save_to_db and self.db_connected:
-                db_id = self.db_handler.save_classification(
-                    classification_data=result
-                )
+                # --- FIX: This line is now formatted to pass 'black' ---
+                db_id = self.db_handler.save_classification(classification_data=result)
                 result["db_id"] = str(db_id) if db_id else None
 
             return result
@@ -167,10 +165,10 @@ def main():
     # Initialize classifier
     classifier = AnimalClassifier()  # Changed to your class name
 
-    # Example usage for testing
+    # Example usage
     # Uncomment and modify the path when testing
-    # image_path = "path/to/your/test/image.jpg" (input actual image path)
-    # result = classifier.predict(image_path) # Changed to your method name
+    # image_path = "path/to/your/test/image.jpg" (insert actual image path when testing)
+    # result = classifier.predict(image_path) # Changed to method name
     # print(f"\nClassification: {result['animal_type']} ({result['confidence']:.2%})")
 
     # Get statistics
