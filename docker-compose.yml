@@ -12,6 +12,14 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: secret
     volumes:
       - ./db:/data/db
+  web-app:
+    build: ./web-app
+    depends_on:
+      - db
+    environment:
+      - MONGO_URI=mongodb://admin:secret@db:27017/animals?authSource=admin
+    ports:
+      - "5000:5000"
 
 volumes:
   images:
