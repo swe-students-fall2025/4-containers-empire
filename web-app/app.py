@@ -1,12 +1,34 @@
-from flask import Flask, render_template, request, redirect, url_for
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
+from __future__ import annotations
+
+
+import os
+import datetime
+from typing import Optional
+
+
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    send_from_directory,
+)
+from flask_login import (
+    LoginManager,
+    login_user,
+    logout_user,
+    login_required,
+    current_user,
+)
+from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from bson.objectid import ObjectId
-import os
+
 
 app = Flask(__name__)
-app.secret_key = "changethiskey"
+app.secret_key = os.environ.get("SECRET_KEY", "changethiskey")
 
 # set up mongodb
 MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/")
@@ -16,7 +38,7 @@ photos_collection = db["photos"]
 users_collection = db["users"]
 
 # upload directory
-UPLOAD_FOLDER = "/app/uploads"
+UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # set up flask login
@@ -28,15 +50,18 @@ login_manager.init_app(app)
 class User:
     def __init__(self, user_doc):
         self.id = str(user_doc["_id"])
-        self.username = user_doc["username"]
+        self.username = user_doc.get("username", "")
 
 
     @property
-    def is_authenticated(self): return True
+    def is_authenticated(self) -> bool: 
+        return True
     @property
-    def is_active(self): return True
+    def is_active(self) -> bool: 
+        return True
     @property
-    def is_anonymous(self): return False
+    def is_anonymous(self) -> bool: 
+        return False
 
 
 
