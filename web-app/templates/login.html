@@ -10,7 +10,7 @@
     {% if register %}Create Account{% else %}Login{% endif %}
     </h1>
       <form class="form-inline">
-        <input name="username" placeholder="Username" required>
+        <input name="username" type="text" placeholder="Username" required>
         {% if register %}
           <input name="email" type="email" placeholder="Email (optional)">
         {% endif %}
