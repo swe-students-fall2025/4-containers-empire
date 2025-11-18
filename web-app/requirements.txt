@@ -1,0 +1,7 @@
+flask
+flask-pymongo
+pymongo
+pytest
+pytest-flask
+black
+pylint
