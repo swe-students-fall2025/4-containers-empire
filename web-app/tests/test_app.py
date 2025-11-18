@@ -16,16 +16,6 @@ from app import app as flask_app
 import app as app_module
 import types
 
-original_url_for = app_module.url_for
-
-
-def patched_url_for(endpoint, **values):
-    if endpoint == "home":
-        endpoint = "index"
-    return original_url_for(endpoint, **values)
-
-
-app_module.url_for = patched_url_for
 
 
 @pytest.fixture
