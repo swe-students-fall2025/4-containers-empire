@@ -110,16 +110,18 @@ class AnimalClassifier:
             # --- Logic added ---
             processing_time_ms = int((time.time() - start_time) * 1000)
 
-            # Generate unique image ID
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            image_filename = os.path.basename(image_path)
-            image_id = f"{timestamp}_{image_filename}"
+            # --- FIX: Combined 3 lines into 1 to reduce local variables ---
+            image_id = (
+                f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_"
+                f"{os.path.basename(image_path)}"
+            )
+            # --- End of fix ---
 
             result = {
                 "image_id": image_id,
                 "image_path": image_path,
-                "animal_type": class_name,  # Using your variable name
-                "confidence": confidence_score,  # Using your variable name
+                "animal_type": class_name,  # Using  variable name
+                "confidence": confidence_score,  # Using  variable name
                 "processing_time_ms": processing_time_ms,
                 "model_version": self.model_version,
                 "all_predictions": {
@@ -130,8 +132,6 @@ class AnimalClassifier:
 
             # Save to database if connected and requested
             if save_to_db and self.db_connected:
-                # NOTE: This line was changed in my previous fix
-                # It now passes a dictionary
                 db_id = self.db_handler.save_classification(
                     classification_data=result
                 )
@@ -167,9 +167,9 @@ def main():
     # Initialize classifier
     classifier = AnimalClassifier()  # Changed to your class name
 
-    # Example usage (you'll need to provide an actual image path)
+    # Example usage for testing
     # Uncomment and modify the path when testing
-    # image_path = "path/to/your/test/image.jpg"
+    # image_path = "path/to/your/test/image.jpg" (input actual image path)
     # result = classifier.predict(image_path) # Changed to your method name
     # print(f"\nClassification: {result['animal_type']} ({result['confidence']:.2%})")
 
