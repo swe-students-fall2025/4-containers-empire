@@ -1,3 +1,5 @@
+"""Flask web application for Who's That Animal."""
+
 from __future__ import annotations
 
 import datetime

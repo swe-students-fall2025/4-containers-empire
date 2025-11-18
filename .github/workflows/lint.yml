@@ -19,6 +19,7 @@ jobs:
         run: |
           cd ${{ matrix.subdir }}
           python -m pip install --upgrade pip
+          pip install -r requirements.txt
           python -m pip install pipenv
           pipenv sync --dev --python $(which python)
           pipenv shell --fancy --python $(which python)
