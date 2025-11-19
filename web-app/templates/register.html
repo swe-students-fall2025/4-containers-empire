@@ -1,43 +1,38 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="/style.css">
+    <title>Sign up for Who's That Animal?</title>
+  </head>
+  <body>
+    <form class="form-inline" method="post">
+      <div class="container">
+        <h1>Sign Up</h1>
+        <p>Fill in your information here.</p>
+        <hr>
 
-<head>
-  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/style.css">
-  <title>Sign up for Who's That Animal?</title>
-</head>
+        <label for="username"><b>Username</b></label>
+        <input type="text" placeholder="Enter username" name="username" required>
 
-<body>
+        <label for="email"><b>Email</b></label>
+        <input type="email" placeholder="Enter email" name="email">
 
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter password" name="psw" required>
 
-  <form class="form-inline" method="post">
-    <div class="container">
-      <h1>Sign Up</h1>
-      <p>Fill in your information here.</p>
-      <hr>
+        <label for="psw-repeat"><b>Repeat Password</b></label>
+        <input type="password" placeholder="Repeat password" name="psw-repeat" required>
 
-      <label for="username"><b>Username</b></label>
-      <input type="text" placeholder="Enter username" name="username" required>
+        <label>
+          <input type="checkbox" checked="checked" name="remember"> Remember me
+        </label>
 
-      <label for="email"><b>Email</b></label>
-      <input type="email" placeholder="Enter email" name="email">
-
-      <label for="psw"><b>Password</b></label>
-      <input type="password" placeholder="Enter password" name="password" required>
-
-      <label for="psw-repeat"><b>Repeat Password</b></label>
-      <input type="password" placeholder="Repeat password" name="psw-repeat" required>
-
-      <label>
-        <input type="checkbox" checked="checked" name="remember"> Remember me
-      </label>
-
-      <div class="clearfix">
-        <button type="button" class="cancelbtn">Cancel</button>
-        <button type="submit" class="signupbtn">Let's rock!</button>
+        <div class="clearfix">
+          <button type="button" class="cancelbtn">Cancel</button>
+          <button type="submit" class="signupbtn">Let's rock!</button>
+        </div>
       </div>
-    </div>
-  </form>
-</body>
-
+    </form>
+  </body>
 </html>

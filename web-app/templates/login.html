@@ -1,40 +1,37 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="/style.css">
+    <title>{% if register %}Register{% else %}Login{% endif %} | Who's That Animal?</title>
+  </head>
+  <body>
+    <h1>
+      {% if register %}Create Account{% else %}Login{% endif %}
+    </h1>
 
-<head>
-  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/style.css">
-  <title>{% if register %}Register{% else %}Login{% endif %} | Who's That Animal?</title>
-</head>
+    <form class="form-inline" method="post">
+      <input name="username" type="text" placeholder="Username" required>
 
-<body>
-  <h1>
-    {% if register %}Create Account{% else %}Login{% endif %}
-  </h1>
+      {% if register %}
+        <input name="email" type="email" placeholder="Email (optional)">
+      {% endif %}
 
-  <form class="form-inline" method="post">
-    <input name="username" type="text" placeholder="Username" required>
+      <input name="password" type="password" placeholder="Password" required>
 
-    {% if register %}
-    <input name="email" type="email" placeholder="Email (optional)">
-    {% endif %}
+      <button type="submit">
+        {% if register %}Register{% else %}Let's rock!{% endif %}
+      </button>
+    </form>
 
-    <input name="password" type="password" placeholder="Password" required>
-
-    <button type="submit">
-      {% if register %}Register{% else %}Let's rock!{% endif %}
-    </button>
-  </form>
-
-  <p>
-    {% if register %}
-    Already have an account?
-    <a href="{{ url_for('login') }}">Login</a>
-    {% else %}
-    Need an account?
-    <a href="{{ url_for('register') }}">Register</a>
-    {% endif %}
-  </p>
-</body>
-
+    <p>
+      {% if register %}
+        Already have an account?
+        <a href="{{ url_for('login') }}">Login</a>
+      {% else %}
+        Need an account?
+        <a href="{{ url_for('register') }}">Register</a>
+      {% endif %}
+    </p>
+  </body>
 </html>
