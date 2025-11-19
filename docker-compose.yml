@@ -3,7 +3,7 @@ version: "3.8"
 services:
   db:
     container_name: mongodb_container
-    image: mongo:4.0-xenial
+    image: mongo:4.4-focal  # CHANGED from mongo:4.0-xenial
     restart: unless-stopped
     ports:
       - "27017:27017"
@@ -12,14 +12,45 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: secret
     volumes:
       - ./db:/data/db
+    networks:
+      - app-network
+
   web-app:
     build: ./web-app
     depends_on:
       - db
     environment:
-      - MONGO_URI=mongodb://admin:secret@db:27017/animals?authSource=admin
+      MONGO_URI: mongodb://admin:secret@db:27017/animal_classifier?authSource=admin
+      SECRET_KEY: "561092"
     ports:
-      - "5000:5000"
+      - "5001:5000"
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  ml-worker:
+    build: ./machine-learning-client
+    depends_on:
+      - db
+    environment:
+      MONGO_URI: mongodb://admin:secret@db:27017/animal_classifier?authSource=admin
+      MONGO_DBNAME: animal_classifier
+      MODEL_PATH: models/keras_model.h5
+      LABELS_PATH: models/labels.txt
+      MODEL_VERSION: v1.0
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - app-network
+    command: python src/worker.py
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
-  images:
+  db-data:
+  uploads:

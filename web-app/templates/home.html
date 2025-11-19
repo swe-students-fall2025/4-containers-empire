@@ -20,16 +20,24 @@
       <p class="mb-6">Here are your most recent observations:</p>
 
       {% if recent %}
-        <div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
           {% for obs in recent %}
-            <div>
-              <img src="{{ url_for('uploaded_file', filename=obs.filename) }}">
-              <p>{{ obs.species or "Still analyzing…" }}</p>
+            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
+              <!-- Added link and size constraint -->
+              <a href="{{ url_for('your_animal', obs_id=obs._id) }}">
+                <img src="{{ url_for('uploaded_file', filename=obs.filename) }}"
+                     style="max-width: 100%; height: 200px; object-fit: cover; border-radius: 4px; display: block;"
+                     alt="Animal photo">
+              </a>
+              <!-- Changed species to animal_type -->
+              <p style="margin-top: 10px; text-align: center;">
+                <strong>{{ obs.animal_type or "Still analyzing…" }}</strong>
+              </p>
             </div>
           {% endfor %}
         </div>
       {% else %}
-        <p>You haven’t uploaded any photos yet.</p>
+        <p>You haven't uploaded any photos yet.</p>
       {% endif %}
     </main>
   </body>

@@ -7,9 +7,11 @@
   </head>
   <body>
     <nav>
-      <a href="{{ url_for('home') }}">Who's That Animal?</a>
+      <h1>Who's That Animal?</h1>
       <div>
+        <a href="{{ url_for('home') }}">Home</a>
         <a href="{{ url_for('upload') }}">Upload more photos</a>
+        <a href="{{ url_for('logout') }}">Log out</a>
       </div>
     </nav>
 
@@ -17,18 +19,32 @@
       <h1>My Animals</h1>
 
       {% if observations %}
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
           {% for obs in observations %}
-            <div>
-              <a href="{{ url_for('your_animal', obs_id=str(obs._id)) }}">
-                <img src="{{ url_for('uploaded_file', filename=obs.filename) }}">
+            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
+              <!--FIXED: Removed str() call -->
+              <a href="{{ url_for('your_animal', obs_id=obs._id) }}">
+                <img src="{{ url_for('uploaded_file', filename=obs.filename) }}" 
+                     style="max-width: 100%; height: auto; border-radius: 4px;" 
+                     alt="Animal photo">
               </a>
-              <p>{{ obs.species or "Analyzing…" }}</p>
+              
+              {% if obs.status == "done" %}
+                <p><strong>{{ obs.animal_type }}</strong></p>
+                <p>Confidence: {{ (obs.confidence * 100) | round(1) }}%</p>
+              {% elif obs.status == "pending" %}
+                <p><em>Processing...</em></p>
+              {% elif obs.status == "failed" %}
+                <p><em>Failed</em></p>
+              {% else %}
+                <p><em>{{ obs.status }}</em></p>
+              {% endif %}
             </div>
           {% endfor %}
         </div>
       {% else %}
-        <p>You haven’t uploaded any observations yet.</p>
+        <p>You haven't uploaded any observations yet.</p>
+        <p><a href="{{ url_for('upload') }}">Upload your first animal photo!</a></p>
       {% endif %}
     </main>
   </body>
