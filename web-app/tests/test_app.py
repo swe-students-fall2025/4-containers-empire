@@ -93,4 +93,3 @@ def test_user_in_db(client):
     user = users_collection.find_one({"username": "mongo_user"})
     assert user is not None
     assert user["email"] == "mongo@example.com"
-    
