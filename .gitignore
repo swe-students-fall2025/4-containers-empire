@@ -150,3 +150,5 @@ cython_debug/
 
 machine-learning-client/test_images/
 db/
+
+uploads/
