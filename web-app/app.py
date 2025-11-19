@@ -29,7 +29,7 @@ load_dotenv()
 
 def create_app():
     app = Flask(__name__)
-    app.secret_key = app.config.get("SECRET_KEY", "defaultsecretkey")
+    app.secret_key = app.config.get("SECRET_KEY", "tempsecretkey")
     mongo_uri = os.environ.get("MONGO_URI", "mongodb://localhost:27017")
     mongo_dbname = os.environ.get("MONGO_DBNAME", "whos_that_animal")
     client = pymongo.MongoClient(mongo_uri)
