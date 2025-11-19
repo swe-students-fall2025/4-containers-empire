@@ -8,7 +8,6 @@ flask = "*"
 flask-login = "*"
 pymongo = "*"
 werkzeug = "*"
-bson = "*"
 certifi = "==2024.2.2"
 charset-normalizer = "==3.3.2"
 gitcommitlogger = "==1.2.5"
@@ -23,5 +22,3 @@ urllib3 = "==2.2.1"
 
 [requires]
 python_version = "3.10"
-
-

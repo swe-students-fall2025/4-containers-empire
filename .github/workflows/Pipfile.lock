@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6e1b5a71d9fa49e1312b655f6c72f50d202377579fcce73c66b75bcd1eaf55be"
+            "sha256": "c429a50561745dd21ef3d8cbf9b65ffa2c6ea4f4ea2614ef37c40949188a3e6a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -23,13 +23,6 @@
             ],
             "markers": "python_version >= '3.9'",
             "version": "==1.9.0"
-        },
-        "bson": {
-            "hashes": [
-                "sha256:d6511b2ab051139a9123c184de1a04227262173ad593429d21e443d6462d6590"
-            ],
-            "index": "pypi",
-            "version": "==0.5.10"
         },
         "certifi": {
             "hashes": [
@@ -144,14 +137,6 @@
             ],
             "markers": "python_version >= '3.10'",
             "version": "==8.3.1"
-        },
-        "colorama": {
-            "hashes": [
-                "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44",
-                "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"
-            ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6'",
-            "version": "==0.4.6"
         },
         "dnspython": {
             "hashes": [
@@ -392,7 +377,7 @@
                 "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427"
             ],
             "index": "pypi",
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==2.9.0.post0"
         },
         "pytz": {
@@ -418,7 +403,7 @@
                 "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"
             ],
             "index": "pypi",
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.16.0"
         },
         "urllib3": {
