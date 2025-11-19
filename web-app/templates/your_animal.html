@@ -2,24 +2,60 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="stylesheet" href="/style.css">
+    <head>
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="/style.css">
+  <title>Your Animal</title>
+  {% if obs.status == "pending" %}
+  <meta http-equiv="refresh" content="3">
+  {% endif %}
+</head>
     <title>Your Animal</title>
+    <!-- ADD: Auto-refresh meta tag for pending status -->
+    {% if obs.status == "pending" %}
+    <meta http-equiv="refresh" content="3">
+    {% endif %}
   </head>
   <body>
-    <h1>And your animal is...</h1>
+    <nav>
+      <h1>Who's That Animal?</h1>
+      <div>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('my_animals') }}">My Animals</a>
+        <a href="{{ url_for('logout') }}">Log out</a>
+      </div>
+    </nav>
 
-    <img src="{{ url_for('uploaded_file', filename=obs.filename) }}"
-         style="max-width: 300px;">
+    <main>
+      <h1>And your animal is...</h1>
 
-    <p>Status: {{ obs.status }}</p>
+      <img src="{{ url_for('uploaded_file', filename=obs.filename) }}"
+           style="max-width: 500px;" alt="Uploaded animal">
 
-    {% if obs.status == "done" %}
-      <h2>...<strong>{{ obs.species }}</strong>!</h2>
-      <p>We're: {{ (obs.confidence * 100) | round(2) }}% confident this is correct.</p>
-    {% else %}
-      <p>Still analyzing… refresh this page in a moment!</p>
-    {% endif %}
+      <!-- CHANGED: Show different content based on status -->
+      {% if obs.status == "pending" %}
+        <p><strong>Status:</strong> Processing... (auto-refreshing)</p>
+        <p>Please wait while our AI analyzes your image...</p>
+      
+      {% elif obs.status == "done" %}
+        <h2>...<strong>{{ obs.animal_type }}</strong>!</h2>
+        <p>We're <strong>{{ (obs.confidence * 100) | round(2) }}%</strong> confident this is correct.</p>
+        {% if obs.processing_time_ms %}
+        <p><small>Processing time: {{ obs.processing_time_ms }}ms</small></p>
+        {% endif %}
+      
+      {% elif obs.status == "failed" %}
+        <p><strong>Status:</strong> Classification failed</p>
+        {% if obs.error %}
+        <p>Error: {{ obs.error }}</p>
+        {% endif %}
+        <p><a href="{{ url_for('upload') }}">Try uploading another image</a></p>
+      
+      {% else %}
+        <p><strong>Status:</strong> {{ obs.status }}</p>
+      {% endif %}
 
-    <a href="{{ url_for('my_animals') }}">Back to My Animals</a>
+      <p><a href="{{ url_for('my_animals') }}">Back to My Animals</a></p>
+    </main>
   </body>
 </html>

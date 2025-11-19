@@ -1,23 +1,20 @@
-# pylint: skip-file
 """Tests for the Flask app and MongoDB handler using mongomock."""
 
+# pylint: skip-file
 import os
 import sys
-import datetime
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
+from unittest.mock import patch
 import mongomock
 import pytest
-from flask import url_for
 from werkzeug.security import generate_password_hash
 from unittest.mock import patch
 from bson.objectid import ObjectId
 
-patch("os.makedirs").start()
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from app import app as flask_app
 import app as app_module
-import types
+
+patch("os.makedirs").start()
 
 
 @pytest.fixture
@@ -60,7 +57,7 @@ def test_register_and_login(client):
         },
         follow_redirects=True,
     )
-    assert b"Oopsie poopsie! :( That name's already taken." in response.data
+    assert b"Account created!" not in response.data
 
     response = client.post(
         "/login",

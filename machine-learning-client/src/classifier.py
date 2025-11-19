@@ -17,7 +17,7 @@ from tensorflow.keras.models import load_model
 from PIL import Image, ImageOps
 import numpy as np
 from dotenv import load_dotenv
-from src.db_handler import DatabaseHandler
+from db_handler import DatabaseHandler
 
 # pylint: enable=wrong-import-position,import-error,no-name-in-module
 
