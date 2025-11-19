@@ -175,7 +175,7 @@ def create_app():
 
     return app
 
-    app = create_app()
-    if __name__ == "__main__":
-        FLASK_PORT = int(os.environ.get("FLASK_PORT", 5000))
-        app.run(host="0.0.0.0", port=FLASK_PORT)
+app = create_app()
+if __name__ == "__main__":
+    FLASK_PORT = int(os.environ.get("FLASK_PORT", 5000))
+    app.run(host="0.0.0.0", port=FLASK_PORT)
