@@ -1,19 +1,18 @@
-# pylint: skip-file
 """Tests for the Flask app and MongoDB handler using mongomock."""
 
+# pylint: skip-file
 import os
 import sys
-import types
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
+from unittest.mock import patch
 import mongomock
 import pytest
-from flask import url_for
 from werkzeug.security import generate_password_hash
 
-import app as app_module
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from app import app as flask_app
+import app as app_module
+
+patch("os.makedirs").start()
 
 
 @pytest.fixture
@@ -54,8 +53,9 @@ def test_register_and_login(client):
             "email": "test2@example.com",
             "password": "password123",
         },
+        follow_redirects=True,
     )
-    assert b"Username already exists" in response.data
+    assert b"Oopsie poopsie! :( That name's already taken." in response.data
 
     response = client.post(
         "/login",
@@ -67,10 +67,10 @@ def test_register_and_login(client):
     response = client.post(
         "/login", data={"username": "testuser", "password": "wrongpassword"}
     )
-    assert b"Incorrect password" in response.data
+    assert b"Invalid login." in response.data
 
     response = client.post("/login", data={"username": "nouser", "password": "pass"})
-    assert b"User not found" in response.data
+    assert b"Invalid login." in response.data
 
 
 def test_protected_route_requires_login(client):
@@ -93,3 +93,57 @@ def test_user_in_db(client):
     user = users_collection.find_one({"username": "mongo_user"})
     assert user is not None
     assert user["email"] == "mongo@example.com"
+
+
+def register_and_login(client, username="u1"):
+    """Helper: register + login a user quickly."""
+    client.post(
+        "/register",
+        data={"username": username, "email": "e@e.com", "password": "pw"},
+        follow_redirects=True,
+    )
+    client.post(
+        "/login",
+        data={"username": username, "password": "pw"},
+        follow_redirects=True,
+    )
+
+
+def test_login_get_page(client):
+    """Covers GET /login (no form submission)."""
+    resp = client.get("/login")
+    assert resp.status_code == 200
+    assert b"login" in resp.data.lower()
+
+
+def test_logout_route(client):
+    """Covers /logout route."""
+    register_and_login(client)
+
+    resp = client.get("/logout", follow_redirects=True)
+    assert resp.status_code == 200
+    assert b"login" in resp.data.lower()
+
+
+def test_home_page_authenticated(client):
+    """Covers home() route."""
+    register_and_login(client)
+
+    resp = client.get("/", follow_redirects=True)
+    assert resp.status_code == 200
+
+
+def test_my_animals_empty(client):
+    """Covers /my_animals with an empty database."""
+    register_and_login(client)
+
+    resp = client.get("/my_animals")
+    assert resp.status_code == 200
+    assert b"observations" in resp.data.lower()
+
+
+def test_upload_get_page(client):
+    """Covers GET /upload."""
+    register_and_login(client)
+    resp = client.get("/upload")
+    assert resp.status_code == 200
