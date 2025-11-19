@@ -1,4 +1,5 @@
 """Flask web application for animal classification system."""
+
 import os
 import datetime
 
