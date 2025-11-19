@@ -1,18 +1,210 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="stylesheet" href="/style.css">
-    <title>Upload Photo</title>
-  </head>
-  <body>
-    <h1>Found a photo of an animal you don't know? Upload it here:</h1>
 
-    <form method="post" enctype="multipart/form-data">
-      <label>Image:
-        <input type="file" name="image" accept="image/*" required>
-      </label><br>
+<head>
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/style.css">
+  <title>Upload Photo</title>
+  <style>
+    .upload-options {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .upload-options button {
+      padding: 10px 20px;
+      background: #f0f0f0;
+      border: 2px solid #ddd;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .upload-options button.active {
+      background: #0077cc;
+      color: white;
+      border-color: #0077cc;
+    }
+
+    .upload-section {
+      display: none;
+    }
+
+    .upload-section.active {
+      display: block;
+    }
+
+    #cameraPreview {
+      max-width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+
+    #capturedImage {
+      max-width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin: 10px 0;
+      display: none;
+    }
+
+    .camera-controls {
+      margin: 10px 0;
+    }
+
+    .camera-controls button {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <h1>Who's That Animal?</h1>
+    <div>
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('my_animals') }}">My Animals</a>
+      <a href="{{ url_for('logout') }}">Log out</a>
+    </div>
+  </nav>
+
+  <main>
+    <h1>Found a photo of an animal you don't know?</h1>
+
+    <div class="upload-options">
+      <button id="uploadBtn" class="active" onclick="switchMode('upload')">Upload File</button>
+      <button id="cameraBtn" onclick="switchMode('camera')">Take Photo</button>
+    </div>
+
+    <form id="uploadForm" method="post" enctype="multipart/form-data">
+      <div id="uploadSection" class="upload-section active">
+        <label>Image:
+          <input type="file" id="fileInput" name="image" accept="image/*">
+        </label>
+      </div>
+
+      <div id="cameraSection" class="upload-section">
+        <video id="cameraPreview" autoplay playsinline style="display: none;"></video>
+        <img id="capturedImage" alt="Captured photo">
+        <div class="camera-controls">
+          <button type="button" id="startCameraBtn" onclick="startCamera()">Start Camera</button>
+          <button type="button" id="captureBtn" onclick="capturePhoto()" style="display: none;">Capture Photo</button>
+          <button type="button" id="retakeBtn" onclick="retakePhoto()" style="display: none;">Retake</button>
+        </div>
+      </div>
+
+      <br>
       <button type="submit">Let's find out!</button>
     </form>
-  </body>
+  </main>
+
+  <script>
+    let stream = null;
+    let capturedBlob = null;
+
+    function switchMode(mode) {
+      document.getElementById('uploadBtn').classList.toggle('active', mode === 'upload');
+      document.getElementById('cameraBtn').classList.toggle('active', mode === 'camera');
+
+      document.getElementById('uploadSection').classList.toggle('active', mode === 'upload');
+      document.getElementById('cameraSection').classList.toggle('active', mode === 'camera');
+
+      if (mode === 'upload' && stream) {
+        stopCamera();
+      }
+
+      if (mode === 'camera') {
+        document.getElementById('cameraPreview').style.display = 'none';
+        document.getElementById('capturedImage').style.display = 'none';
+        document.getElementById('startCameraBtn').style.display = 'inline-block';
+        document.getElementById('captureBtn').style.display = 'none';
+        document.getElementById('retakeBtn').style.display = 'none';
+        capturedBlob = null;
+      }
+    }
+
+    document.getElementById('uploadForm').addEventListener('submit', function (e) {
+      const uploadMode = document.getElementById('uploadSection').classList.contains('active');
+      const fileInput = document.getElementById('fileInput');
+
+      if (!uploadMode && capturedBlob) {
+        const file = new File([capturedBlob], 'camera-photo.jpg', { type: 'image/jpeg' });
+
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+      }
+
+      if (!fileInput.files || fileInput.files.length === 0) {
+        e.preventDefault();
+        if (uploadMode) {
+          alert('Please select an image file to upload.');
+        } else {
+          alert('Please capture a photo first.');
+        }
+        return false;
+      }
+    });
+
+    async function startCamera() {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' }
+        });
+        const video = document.getElementById('cameraPreview');
+        video.srcObject = stream;
+        video.style.display = 'block';
+        document.getElementById('startCameraBtn').style.display = 'none';
+        document.getElementById('captureBtn').style.display = 'inline-block';
+      } catch (error) {
+        alert('Could not access camera: ' + error.message);
+      }
+    }
+
+    function capturePhoto() {
+      const video = document.getElementById('cameraPreview');
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+
+      canvas.toBlob(function (blob) {
+        capturedBlob = blob;
+        const img = document.getElementById('capturedImage');
+        img.src = URL.createObjectURL(blob);
+        img.style.display = 'block';
+        video.style.display = 'none';
+
+        const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        document.getElementById('cameraInput').files = dataTransfer.files;
+
+        document.getElementById('captureBtn').style.display = 'none';
+        document.getElementById('retakeBtn').style.display = 'inline-block';
+        stopCamera();
+      }, 'image/jpeg', 0.95);
+    }
+
+    function retakePhoto() {
+      document.getElementById('capturedImage').style.display = 'none';
+      document.getElementById('cameraPreview').style.display = 'block';
+      document.getElementById('captureBtn').style.display = 'inline-block';
+      document.getElementById('retakeBtn').style.display = 'none';
+      capturedBlob = null;
+      startCamera();
+    }
+
+    function stopCamera() {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+    }
+
+    window.addEventListener('beforeunload', stopCamera);
+  </script>
+</body>
+
 </html>
