@@ -1,36 +1,39 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" name=""viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="stylesheet" href="/style.css">
-    <title>Home | Who's That Animal?</title>
-  </head>
-  <body>
-    <nav>
-      <h1>Who's That Animal?</h1>
+
+<head>
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/style.css">
+  <title>Home | Who's That Animal?</title>
+</head>
+
+<body>
+  <nav>
+    <h1>Who's That Animal?</h1>
+    <div>
+      <a href="{{ url_for('upload') }}">Upload a photo</a>
+      <a href="{{ url_for('my_animals') }}">View my animals</a>
+      <a href="{{ url_for('logout') }}">Log out</a>
+    </div>
+  </nav>
+
+  <main>
+    <h2>Welcome, {{ current_user.username }}!</h2>
+    <p class="mb-6">Here are your most recent observations:</p>
+
+    {% if recent %}
+    <div>
+      {% for obs in recent %}
       <div>
-        <a href="{{ url_for('upload') }}">Upload a photo</a>
-        <a href="{{ url_for('my_animals') }}">View my animals</a>
-        <a href="{{ url_for('logout') }}">Log out</a>
+        <img src="{{ url_for('uploaded_file', filename=obs.filename) }}">
+        <p>{{ obs.species or "Still analyzing…" }}</p>
       </div>
-    </nav>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p>You haven’t uploaded any photos yet.</p>
+    {% endif %}
+  </main>
+</body>
 
-    <main>
-      <h2>Welcome, {{ current_user.username }}!</h2>
-      <p class="mb-6">Here are your most recent observations:</p>
-
-      {% if recent %}
-        <div>
-          {% for obs in recent %}
-            <div>
-              <img src="{{ url_for('get_image', img_id=str(obs['image_fs_id'])) }}">
-              <p>{{ obs.species }}</p>
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p>You haven’t uploaded any photos yet.</p>
-      {% endif %}
-    </main>
-  </body>
 </html>

@@ -3,6 +3,7 @@
 
 import os
 import sys
+import datetime
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -10,22 +11,13 @@ import pytest
 import mongomock
 from flask import url_for
 from werkzeug.security import generate_password_hash
-from flask import url_for
+from unittest.mock import patch
+from bson.objectid import ObjectId
 
+patch("os.makedirs").start()
 from app import app as flask_app
 import app as app_module
 import types
-
-original_url_for = app_module.url_for
-
-
-def patched_url_for(endpoint, **values):
-    if endpoint == "home":
-        endpoint = "index"
-    return original_url_for(endpoint, **values)
-
-
-app_module.url_for = patched_url_for
 
 
 @pytest.fixture
@@ -67,7 +59,7 @@ def test_register_and_login(client):
             "password": "password123",
         },
     )
-    assert b"Username already exists" in response.data
+    assert b"Oopsie poopsie! :( That name's already taken." in response.data
 
     response = client.post(
         "/login",
@@ -105,3 +97,57 @@ def test_user_in_db(client):
     user = users_collection.find_one({"username": "mongo_user"})
     assert user is not None
     assert user["email"] == "mongo@example.com"
+
+
+def register_and_login(client, username="u1"):
+    """Helper: register + login a user quickly."""
+    client.post(
+        "/register",
+        data={"username": username, "email": "e@e.com", "password": "pw"},
+        follow_redirects=True,
+    )
+    client.post(
+        "/login",
+        data={"username": username, "password": "pw"},
+        follow_redirects=True,
+    )
+
+
+def test_login_get_page(client):
+    """Covers GET /login (no form submission)."""
+    resp = client.get("/login")
+    assert resp.status_code == 200
+    assert b"login" in resp.data.lower()
+
+
+def test_logout_route(client):
+    """Covers /logout route."""
+    register_and_login(client)
+
+    resp = client.get("/logout", follow_redirects=True)
+    assert resp.status_code == 200
+    assert b"login" in resp.data.lower()
+
+
+def test_home_page_authenticated(client):
+    """Covers home() route."""
+    register_and_login(client)
+
+    resp = client.get("/", follow_redirects=True)
+    assert resp.status_code == 200
+
+
+def test_my_animals_empty(client):
+    """Covers /my_animals with an empty database."""
+    register_and_login(client)
+
+    resp = client.get("/my_animals")
+    assert resp.status_code == 200
+    assert b"observations" in resp.data.lower()
+
+
+def test_upload_get_page(client):
+    """Covers GET /upload."""
+    register_and_login(client)
+    resp = client.get("/upload")
+    assert resp.status_code == 200
