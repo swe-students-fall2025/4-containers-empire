@@ -3,19 +3,17 @@
 
 import os
 import sys
+import types
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-import pytest
 import mongomock
+import pytest
 from flask import url_for
 from werkzeug.security import generate_password_hash
-from flask import url_for
 
-from app import app as flask_app
 import app as app_module
-import types
-
+from app import app as flask_app
 
 
 @pytest.fixture

@@ -1,4 +1,9 @@
 -i https://pypi.org/simple
+flask
+flask-login
+pymongo
+werkzeug
+bson
 certifi==2024.2.2; python_version >= '3.6'
 charset-normalizer==3.3.2; python_full_version >= '3.7.0'
 gitcommitlogger==1.2.5; python_version >= '3.7'
