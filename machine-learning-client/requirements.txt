@@ -1,5 +1,6 @@
 -i https://pypi.org/simple
 pylint
+black
 flask
 flask-login
 pymongo
