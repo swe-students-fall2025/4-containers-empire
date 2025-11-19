@@ -7,8 +7,8 @@ import datetime
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-import pytest
 import mongomock
+import pytest
 from flask import url_for
 from werkzeug.security import generate_password_hash
 from unittest.mock import patch
@@ -58,6 +58,7 @@ def test_register_and_login(client):
             "email": "test2@example.com",
             "password": "password123",
         },
+        follow_redirects=True,
     )
     assert b"Oopsie poopsie! :( That name's already taken." in response.data
 
@@ -71,10 +72,10 @@ def test_register_and_login(client):
     response = client.post(
         "/login", data={"username": "testuser", "password": "wrongpassword"}
     )
-    assert b"Incorrect password" in response.data
+    assert b"Invalid login." in response.data
 
     response = client.post("/login", data={"username": "nouser", "password": "pass"})
-    assert b"User not found" in response.data
+    assert b"Invalid login." in response.data
 
 
 def test_protected_route_requires_login(client):

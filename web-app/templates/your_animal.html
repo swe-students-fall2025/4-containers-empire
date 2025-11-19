@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="/style.css">
+    <title>Your Animal</title>
+  </head>
+  <body>
+    <h1>And your animal is...</h1>
+
+    <img src="{{ url_for('uploaded_file', filename=obs.filename) }}"
+         style="max-width: 300px;">
+
+    <p>Status: {{ obs.status }}</p>
+
+    {% if obs.status == "done" %}
+      <h2>...<strong>{{ obs.species }}</strong>!</h2>
+      <p>We're: {{ (obs.confidence * 100) | round(2) }}% confident this is correct.</p>
+    {% else %}
+      <p>Still analyzing… refresh this page in a moment!</p>
+    {% endif %}
+
+    <a href="{{ url_for('my_animals') }}">Back to My Animals</a>
+  </body>
+</html>
