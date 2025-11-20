@@ -33,7 +33,9 @@ db = client["animal_classifier"]
 photos_collection = db["photos"]
 users_collection = db["users"]
 
-UPLOAD_FOLDER = "/app/uploads"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
+
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 login_manager = LoginManager()

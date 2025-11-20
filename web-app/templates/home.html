@@ -1,44 +1,49 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="stylesheet" href="/style.css">
-    <title>Home | Who's That Animal?</title>
-  </head>
-  <body>
-    <nav>
-      <h1>Who's That Animal?</h1>
-      <div>
-        <a href="{{ url_for('upload') }}">Upload a photo</a>
-        <a href="{{ url_for('my_animals') }}">View my animals</a>
-        <a href="{{ url_for('logout') }}">Log out</a>
+
+<head>
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <title>Home | Who's That Animal?</title>
+</head>
+
+<body>
+  <nav>
+    <h1>Who's That Animal?</h1>
+    <div>
+      <a href="{{ url_for('upload') }}">Upload a photo</a>
+      <a href="{{ url_for('my_animals') }}">View my animals</a>
+      <a href="{{ url_for('logout') }}">Log out</a>
+    </div>
+  </nav>
+
+  <main>
+    <h2>Welcome, {{ current_user.username }}!</h2>
+    <p class="mb-6">Here are your most recent observations:</p>
+
+    {% if recent %}
+    <div
+      style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+      {% for obs in recent %}
+      <div style="border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
+        <!-- Added link and size constraint -->
+        <a href="{{ url_for('your_animal', obs_id=obs._id) }}">
+          <img src="{{ url_for('uploaded_file', filename=obs.filename) }}"
+            style="max-width: 100%; height: 200px; object-fit: cover; border-radius: 4px; display: block;"
+            alt="Animal photo">
+        </a>
+        <!-- Changed species to animal_type -->
+        <p style="margin-top: 10px; text-align: center;">
+          <strong>{{ obs.animal_type or "Still analyzing…" }}</strong>
+        </p>
       </div>
-    </nav>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p>You haven't uploaded any photos yet.</p>
+    {% endif %}
+  </main>
+</body>
 
-    <main>
-      <h2>Welcome, {{ current_user.username }}!</h2>
-      <p class="mb-6">Here are your most recent observations:</p>
-
-      {% if recent %}
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
-          {% for obs in recent %}
-            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
-              <!-- Added link and size constraint -->
-              <a href="{{ url_for('your_animal', obs_id=obs._id) }}">
-                <img src="{{ url_for('uploaded_file', filename=obs.filename) }}"
-                     style="max-width: 100%; height: 200px; object-fit: cover; border-radius: 4px; display: block;"
-                     alt="Animal photo">
-              </a>
-              <!-- Changed species to animal_type -->
-              <p style="margin-top: 10px; text-align: center;">
-                <strong>{{ obs.animal_type or "Still analyzing…" }}</strong>
-              </p>
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p>You haven't uploaded any photos yet.</p>
-      {% endif %}
-    </main>
-  </body>
 </html>

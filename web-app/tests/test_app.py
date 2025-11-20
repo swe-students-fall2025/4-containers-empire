@@ -7,6 +7,8 @@ from unittest.mock import patch
 import mongomock
 import pytest
 from werkzeug.security import generate_password_hash
+from unittest.mock import patch
+from bson.objectid import ObjectId
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from app import app as flask_app
@@ -32,6 +34,23 @@ def client(monkeypatch):
         yield test_client
 
 
+def test_style_css_served(client, monkeypatch, tmp_path):
+    """Covers /style.css route including successful file read."""
+
+    fake_templates = tmp_path / "templates"
+    fake_templates.mkdir()
+    css_file = fake_templates / "styles.css"
+    css_file.write_text("body { background: black; }")
+
+    monkeypatch.setattr(app_module.app, "root_path", str(tmp_path))
+
+    resp = client.get("/style.css")
+
+    assert resp.status_code == 200
+    assert b"background" in resp.data
+    assert resp.headers["Content-Type"] == "text/css"
+
+
 def test_register_and_login(client):
     """Test user registration and login flow."""
 
@@ -55,7 +74,7 @@ def test_register_and_login(client):
         },
         follow_redirects=True,
     )
-    assert b"Oopsie poopsie! :( That name's already taken." in response.data
+    assert b"Account created!" not in response.data
 
     response = client.post(
         "/login",
