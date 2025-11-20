@@ -3,20 +3,21 @@
 
 <head>
   <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <title>{% if register %}Register{% else %}Login{% endif %} | Who's That Animal?</title>
 </head>
 
 <body>
-  {% with messages = get_flashed_messages() %}
-  {% if messages %}
-  <ul class="flashes">
+  <div class="flash-container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
     {% for message in messages %}
-    <li>{{ message }}</li>
+    <div class="flash">{{ message }}</div>
     {% endfor %}
-  </ul>
-  {% endif %}
-  {% endwith %}
+    {% endif %}
+    {% endwith %}
+  </div>
+
 
   <h1>
     {% if register %}Create Account{% else %}Login{% endif %}

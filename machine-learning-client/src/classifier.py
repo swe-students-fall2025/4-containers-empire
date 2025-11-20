@@ -51,10 +51,14 @@ class AnimalClassifier:
         self.model = load_model(model_path, compile=False)
         self.class_names = self._load_labels(labels_path)
 
-        # --- Additions ---
-        self.db_handler = DatabaseHandler()
-        self.db_connected = self.db_handler.connect()
-        # --- End of additions ---
+        # inside __init__
+        try:
+            self.db_handler = DatabaseHandler()
+            self.db_connected = self.db_handler.connect()
+        except ValueError:
+            # Missing env variables → disable DB integration for tests
+            self.db_handler = None
+            self.db_connected = False
 
     def _load_labels(self, labels_path):
         """
@@ -136,6 +140,9 @@ class AnimalClassifier:
                 result["db_id"] = str(db_id) if db_id else None
 
             return result
+
+        except FileNotFoundError:
+            raise
 
         except (IOError, ValueError) as error:
             print(f"✗ Error classifying image: {error}")

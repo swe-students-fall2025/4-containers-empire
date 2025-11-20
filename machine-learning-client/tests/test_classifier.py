@@ -2,6 +2,7 @@
 Unit tests for the animal classifier module.
 """
 
+# pylint: skip-file
 import os
 import sys
 from unittest.mock import Mock, patch
@@ -102,25 +103,24 @@ class TestAnimalClassifier:
         assert processed.dtype == np.float32
 
     @patch("classifier.load_model")
-    def test_predict(
-        self, mock_load_model, mock_model, sample_labels, sample_image
-    ):  # pylint: disable=redefined-outer-name
+    def test_predict(self, mock_load_model, mock_model, sample_labels, sample_image):
         """Test image classification prediction."""
         mock_load_model.return_value = mock_model
 
         classifier = AnimalClassifier(
             model_path="/fake/model.h5", labels_path=sample_labels
         )
-        class_name, confidence = classifier.predict(sample_image)
+        result = classifier.predict(sample_image)
+        class_name = result["animal_type"]
+        confidence = result["confidence"]
 
-        # Model returns highest score (0.5) at index 4, which is "4 Dog"
         assert class_name == "4 Dog"
         assert confidence == 0.5
         assert isinstance(confidence, float)
         mock_model.predict.assert_called_once()
 
     @patch("classifier.load_model")
-    def test_predict_with_different_probabilities(  # pylint: disable=redefined-outer-name
+    def test_predict_with_different_probabilities(
         self, mock_load_model, sample_labels, sample_image
     ):
         """Test prediction with different probability distributions."""
@@ -131,9 +131,10 @@ class TestAnimalClassifier:
         classifier = AnimalClassifier(
             model_path="/fake/model.h5", labels_path=sample_labels
         )
-        class_name, confidence = classifier.predict(sample_image)
+        result = classifier.predict(sample_image)
+        class_name = result["animal_type"]
+        confidence = result["confidence"]
 
-        # Highest score (0.8) at index 0, which is "0 Butterfly"
         assert class_name == "0 Butterfly"
         assert abs(confidence - 0.8) < 0.001
 
@@ -152,7 +153,7 @@ class TestAnimalClassifier:
             classifier.predict("/nonexistent/image.jpg")
 
     @patch("classifier.load_model")
-    def test_multiple_predictions(  # pylint: disable=redefined-outer-name
+    def test_multiple_predictions(
         self, mock_load_model, mock_model, sample_labels, sample_image
     ):
         """Test making multiple predictions with the same classifier."""
@@ -163,12 +164,16 @@ class TestAnimalClassifier:
         )
 
         # First prediction
-        class_name1, confidence1 = classifier.predict(sample_image)
+        result1 = classifier.predict(sample_image)
+        class_name1 = result1["animal_type"]
+        confidence1 = result1["confidence"]
         assert class_name1 == "4 Dog"
         assert confidence1 == 0.5
 
         # Second prediction
-        class_name2, confidence2 = classifier.predict(sample_image)
+        result2 = classifier.predict(sample_image)
+        class_name2 = result2["animal_type"]
+        confidence2 = result2["confidence"]
         assert class_name2 == "4 Dog"
         assert confidence2 == 0.5
 

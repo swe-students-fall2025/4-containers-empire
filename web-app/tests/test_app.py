@@ -34,6 +34,23 @@ def client(monkeypatch):
         yield test_client
 
 
+def test_style_css_served(client, monkeypatch, tmp_path):
+    """Covers /style.css route including successful file read."""
+
+    fake_templates = tmp_path / "templates"
+    fake_templates.mkdir()
+    css_file = fake_templates / "styles.css"
+    css_file.write_text("body { background: black; }")
+
+    monkeypatch.setattr(app_module.app, "root_path", str(tmp_path))
+
+    resp = client.get("/style.css")
+
+    assert resp.status_code == 200
+    assert b"background" in resp.data
+    assert resp.headers["Content-Type"] == "text/css"
+
+
 def test_register_and_login(client):
     """Test user registration and login flow."""
 
