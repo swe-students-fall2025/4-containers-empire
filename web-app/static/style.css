@@ -1,13 +1,14 @@
 body {
   font-family: Arial, sans-serif;
   margin: 20px;
-  background: #fafafa;
-  color: #333;
+  text-align: center;
+  background: #9ee84a;
+  color: #fdff9e;
 }
 
 h1,
 h2 {
-  color: #222;
+  color: #fdff9e;
 }
 
 nav {
@@ -26,7 +27,7 @@ nav h1 {
 nav a {
   margin-left: 12px;
   text-decoration: none;
-  color: #0077cc;
+  color: #fdff9e;
 }
 
 nav a:hover {
@@ -58,8 +59,8 @@ input[type="file"] {
 
 button {
   padding: 10px;
-  background: #0077cc;
-  color: #fff;
+  background: #04de6a;
+  color: #ffd68f;
   border: none;
   border-radius: 4px;
   cursor: pointer;
