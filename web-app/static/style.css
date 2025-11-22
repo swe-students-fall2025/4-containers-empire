@@ -62,9 +62,10 @@ input[type="file"] {
 }
 
 button {
+  font-family: "Roboto Slab", serif;
   padding: 10px;
   background: #04de6a;
-  color: #ffd68f;
+  color: #ffffff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
