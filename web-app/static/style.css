@@ -2,8 +2,8 @@ body {
   font-family: Arial, sans-serif;
   margin: 20px;
   text-align: center;
-  background: #9ee84a;
-  color: #fdff9e;
+  background: #95d5b2;
+  color: #000;
 }
 
 h1,
@@ -27,7 +27,7 @@ nav h1 {
 nav a {
   margin-left: 12px;
   text-decoration: none;
-  color: #fdff9e;
+  color: #000;
 }
 
 nav a:hover {
