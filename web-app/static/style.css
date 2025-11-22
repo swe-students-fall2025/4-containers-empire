@@ -83,18 +83,3 @@ img {
   max-width: 100%;
   height: auto;
 }
-
-.flash-container {
-  margin: 20px auto;
-  max-width: 300px;
-  text-align: center;
-}
-
-.flash {
-  display: inline-block;
-  padding: 10px 16px;
-  border-radius: 6px;
-  background-color: #ececec;
-  font-weight: 500;
-  margin-bottom: 10px;
-}

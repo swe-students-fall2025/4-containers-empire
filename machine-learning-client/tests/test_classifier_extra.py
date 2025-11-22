@@ -222,7 +222,6 @@ def test_predict_all_predictions_structure(mock_load_model, tmp_path):
 
     clf = AnimalClassifier(model_path="/fake/model.h5", labels_path=str(labels))
 
-    # Disable DB to avoid branching
     clf.db_connected = False
     clf.db_handler = None
 
