@@ -5,7 +5,7 @@ Unit tests for the animal classifier module.
 # pylint: skip-file
 import os
 import sys
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, MagicMock
 import numpy as np
 import pytest
 from PIL import Image

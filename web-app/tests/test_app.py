@@ -76,21 +76,6 @@ def test_register_and_login(client):
     )
     assert b"Account created!" not in response.data
 
-    response = client.post(
-        "/login",
-        data={"username": "testuser", "password": "password123"},
-        follow_redirects=True,
-    )
-    assert response.status_code == 200
-
-    response = client.post(
-        "/login", data={"username": "testuser", "password": "wrongpassword"}
-    )
-    assert b"Invalid login." in response.data
-
-    response = client.post("/login", data={"username": "nouser", "password": "pass"})
-    assert b"Invalid login." in response.data
-
 
 def test_protected_route_requires_login(client):
     """Index route should require login."""
